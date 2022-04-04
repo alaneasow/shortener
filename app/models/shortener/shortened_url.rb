@@ -88,7 +88,6 @@ class Shortener::ShortenedUrl < ActiveRecord::Base
     shortened_url = ::Shortener::ShortenedUrl.unexpired.where(unique_key: token).first
 
     url = if shortened_url
-      shortened_url.increment_usage_count if track
       merge_params_to_url(url: shortened_url.url, params: additional_params)
     else
       Shortener.default_redirect || '/'
@@ -114,10 +113,6 @@ class Shortener::ShortenedUrl < ActiveRecord::Base
     end
 
     url
-  end
-
-  def increment_usage_count
-    self.class.increment_counter(:use_count, id)
   end
 
   def to_param
