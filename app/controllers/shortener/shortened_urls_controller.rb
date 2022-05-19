@@ -9,7 +9,7 @@ class Shortener::ShortenedUrlsController < ActionController::Metal
     token = ::Shortener::ShortenedUrl.extract_token(params[:id])
     track = Shortener.ignore_robots.blank? || request.human?
     url   = ::Shortener::ShortenedUrl.fetch_with_token(token: token, additional_params: params, track: track)
-    if Rails.env.production?
+    if !Rails.env.production?
       redirect_to "https://test.sparkstudio.co#{url[:url]}", status: :moved_permanently
     else
       redirect_to "https://sparkstudio.co#{url[:url]}", status: :moved_permanently
